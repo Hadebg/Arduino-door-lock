@@ -17,6 +17,8 @@
   status = 5: Lockdown
 */
 
+//Sequence: Input new RFID card (status 0) -> input new password (status 1) -> check password or RFID card to unlock (status 2, 3, 4, 5)
+
 //Actually I wanted to have RTC included in my project as well but my RTC is broken sooooo idk ;-;
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);  
@@ -37,7 +39,7 @@ void setup() {
   dht.begin();
   //Begin to scan new RFID card
   lcd.clear();
-  lcd.print("Quet the moi!");
+  lcd.print("Quet the moi!"); //(LCD: Scan new card!)
 }
 
 void loop() {
@@ -86,13 +88,13 @@ void InputCard() {
   }
   Serial.println();
   lcd.clear();
-  lcd.print("Thanh cong!");
+  lcd.print("Thanh cong!"); //(LCD: Success!)
   SuccessTone();
   delay(1500);
   CardReader.PICC_HaltA();  
   //Begin the entering new password phase
   lcd.clear();
-  lcd.print("Mat khau moi:");
+  lcd.print("Mat khau moi:"); //(LCD: New password:)
   status = 1;
 }
 
@@ -106,7 +108,7 @@ void CheckCard(){
     for (byte i = 0; i < uidLength; i++) {
       if (CardReader.uid.uidByte[i] != rfidUID[i]) {
         lcd.clear();
-        lcd.print("Sai the! Thu lai!");
+        lcd.print("Sai the! Thu lai!"); //(LCD: Wrong card! Retry!)
         Attempt++;
         WrongTone();
         delay(900);
@@ -114,7 +116,7 @@ void CheckCard(){
       }
       else {
       lcd.clear();
-      lcd.print("Da mo khoa!");
+      lcd.print("Da mo khoa!"); //(LCD: Unlocked!)
       //Reset
       Attempt = 0;
       MaxAttempt = 5;
@@ -124,7 +126,7 @@ void CheckCard(){
       delay(4500); //Unlock time 
       DoorLocker.write(Lock);
       lcd.clear();
-      lcd.print("Da khoa!");
+      lcd.print("Da khoa!"); //(LCD: Locked!)
       LockedTone();
       delay(1300); //Enough time to show on screen
       break;
@@ -140,7 +142,7 @@ void KeypadInput() {
   if (customKey){
     if (customKey == '#'){
       lcd.clear();
-      lcd.print("Thanh cong!");
+      lcd.print("Thanh cong!"); //(LCD: Success!)
       status = 2;
       data_count = 0;
       SuccessTone();
@@ -181,7 +183,7 @@ void checkKeypad() {
           lcd.clear();
           if (!strcmp(Data, Master)) {
             Serial.println("Password is correct!");
-            lcd.print("Da mo khoa!");
+            lcd.print("Da mo khoa!"); //(LCD: Unlocked!)
             //Reset
             Attempt = 0;
             MaxAttempt = 5;
@@ -191,13 +193,13 @@ void checkKeypad() {
             delay(4500); //Unlock time
             DoorLocker.write(Lock);
             lcd.clear();
-            lcd.print("Da khoa!");
+            lcd.print("Da khoa!"); //(LCD: Locked!)
             LockedTone();
             delay(1300);
           } 
           else {
             Serial.println("Password is incorrect!");
-            lcd.print("Sai! Thu lai!");
+            lcd.print("Sai! Thu lai!"); //(LCD: Wrong! Retry!)
             Attempt++;
             WrongTone();
             delay(900);
@@ -234,23 +236,23 @@ void displayTempAndHumidity() {
   float t = dht.readTemperature();
 
   if (isnan(h) || isnan(t)) {
-    Serial.println("Khong doc duoc gia tri tu DHT11");
+    Serial.println("Khong doc duoc gia tri tu DHT11"); //(Serial: Unable to read DHT11)
     return;
   }
 
-  Serial.print("Do am: ");
+  Serial.print("Do am: "); //(Serial: Humidity:)
   Serial.print(h);
   Serial.print("%\t");
-  Serial.print("Nhiet do: ");
+  Serial.print("Nhiet do: "); //(Serial: Temperature:)
   Serial.print(t);
   Serial.println(" *C");
 
   lcd.setCursor(0, 0);
-  lcd.print("Nhiet do: ");
+  lcd.print("Nhiet do: "); //(LCD: Temperature:)
   lcd.print(t);
   lcd.print("C");
   lcd.setCursor(0, 1);
-  lcd.print("Do am: ");
+  lcd.print("Do am: "); //(LCD: Humidity:)
   lcd.print(h);
   lcd.print("%");
 
@@ -258,7 +260,7 @@ void displayTempAndHumidity() {
   if (status == 4){
     lcd.clear();
     lcd.setCursor(0,0);
-    lcd.print("Mat khau:");
+    lcd.print("Mat khau:"); //(LCD: Password:)
     status = 3;
     }
   delay(5); //Hope ;-;
@@ -279,11 +281,11 @@ void Lockdown(){
     while (Countdown != 0){
       lcd.clear();
       lcd.setCursor(0,0);
-      lcd.print("Sai qua nhieu!");
+      lcd.print("Sai qua nhieu!"); //(LCD: Too many attempts!)
       lcd.setCursor(0,1);
-      lcd.print("Cho: ");
+      lcd.print("Cho: "); //(LCD: Wait: )
       lcd.print(Countdown);
-      lcd.print(" giay");
+      lcd.print(" giay"); //(LCD: second)
       Countdown--;
       delay(1000);
     }
