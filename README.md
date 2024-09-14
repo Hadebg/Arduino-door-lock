@@ -26,4 +26,4 @@ Library used: LiquidCrystal i2c, MFRC522, Keypad, DHT, ESP32Servo
 
 IDE: PlatformIO in Visual Studio Code
 
-Language showing on LCD screen is Vietnamese
+Language showing on LCD screen is Vietnamese (I translated them in my code, check cpp)
