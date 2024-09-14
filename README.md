@@ -21,4 +21,8 @@ Connection: (you can change pin if you wish but remember to change in the code a
 - Micro servo (5V): TX2 (17)
 - Active buzzer: 15 (Connect (+) to 15 and (-) to GND)
 
+Library used: LiquidCrystal i2c, MFRC522, Keypad, DHT, ESP32Servo
+
+IDE: PlatformIO in Visual Studio Code
+
 Language showing on LCD screen is Vietnamese
